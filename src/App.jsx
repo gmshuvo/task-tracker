@@ -1,10 +1,17 @@
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-
+import Layout from './pages/Layout';
+import Home from './pages/Home';
+import "daisyui/dist/full.css";
 function App() {
   return (
-    <div className="">
-      <h1 className='text-3xl text-red-400'>My React App</h1>
-    </div>
+    <Routes>
+      <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/blog/*" element={<BlogApp />} />
+          <Route path="/users/*" element={<UserApp />} /> */}
+        </Route>
+    </Routes>
   );
 }
 
