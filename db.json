@@ -1,0 +1,143 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "name": "Work on project A Work on project A Work on project A Work on project A Work on project A",
+      "tags": ["work", "project", "hobby", "art", "rest", "work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 2,
+      "name": "Hobby - Painting",
+      "tags": ["hobby", "art"],
+      "active": true,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 3,
+      "name": "Sleep",
+      "tags": ["rest"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 4,
+      "name": "Work on project B",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 5,
+      "name": "Work on project C",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 6,
+      "name": "Work on project D",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 7,
+      "name": "Work on project E",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 8,
+      "name": "Work on project F",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 9,
+      "name": "Work on project G",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 10,
+      "name": "Work on project H",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 11,
+      "name": "Work on project I",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 12,
+      "name": "Work on project J",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 13,
+      "name": "Work on project K",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 14,
+      "name": "Work on project L",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 15,
+      "name": "Work on project M",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    },
+    {
+      "id": 16,
+      "name": "Work on project N",
+      "tags": ["work", "project"],
+      "active": false,
+      "activityLog": [],
+      "lastStartTime": 0
+    }
+  ],
+  "tags": [
+    "work",
+    "project",
+    "hobby",
+    "art",
+    "rest"
+  ],
+  "settings": {
+    "theme": "default",
+    "singleTaskMode": false
+  }
+}
