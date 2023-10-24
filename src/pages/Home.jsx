@@ -4,6 +4,7 @@ import TaskItem from "../components/TaskItem";
 import useFetch from "../hooks/useFetch";
 import LoadingSpinner from "../components/LoadingSpinner";
 import AddTaskModal from "../components/AddTaskModal";
+import FetchData from "../utils/FetchData";
 const Home = () => {
   const [activeTaskId, setActiveTaskId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +16,12 @@ const Home = () => {
     loading,
     setData: setTasks,
   } = useFetch("http://localhost:3010/tasks");
+
+  if(tasks){
+    tasks.sort((a, b)=>{
+      return b.createdAt - a.createdAt;
+    })
+  }
 
   console.log(tasks);
 
@@ -34,9 +41,25 @@ const Home = () => {
     // Implement the logic to add a tag to a task
   };
 
-  const removeTagFromTask = (taskId, tagToRemove) => {
+  const removeTagFromTask = async(taskId, tagToRemove) => {
     // Implement the logic to remove a tag from a task
-    console.log(taskId, tagToRemove);
+    const filteredTags = tasks.find((task) => task.id === taskId).tags.filter((tag) => tag !== tagToRemove);
+    console.log(filteredTags);
+    const { error } = await FetchData(`http://localhost:3010/tasks/${taskId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        tags: tasks.find((task) => task.id === taskId).tags.filter((tag) => tag !== tagToRemove)
+      }),
+    })
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId
@@ -46,45 +69,58 @@ const Home = () => {
     );
   };
 
-  const addNewTask = () => {
-    // const newTask = {
-    //   id: tasks.length + 1,
-    //   name: "New Task",
-    //   tags: [],
-    //   active: false,
-    //   activityLog: [],
-    //   lastStartTime: null,
-    // };
-    // setTasks((prevTasks) => [...prevTasks, newTask]);
+  const addNewTask = async (newTask) => {
+    console.log(newTask);
+    const { data, error } = await FetchData("http://localhost:3010/tasks", {
+      method: "POST",
+      body: JSON.stringify(newTask),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    setTasks((prevTasks) => [data, ...prevTasks]);
   };
 
-  const removeTask = (taskId) => {
+  const removeTask = async (taskId) => {
     // Implement the logic to remove a task
-    console.log(taskId);
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
-  };
+    const { error } = await FetchData(
+      `http://localhost:3010/tasks/${taskId}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-  const handleModalOpen = () => {
-    // Implement the logic to open the modal
+    if (error) {
+      console.log(error);
+      return;
+    }
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
   return (
     <>
-      <div className="mt-11 flex flex-col items-center justify-center">
+      <div className=" flex items-center justify-center mt-10">
         {/* Add Button Open creatTaskModal*/}
-        <AddTaskButton setIsModalOpen={setIsModalOpen} />
         {/* Task List Container */}
         <div className="mt-10 mb-10 min-h-[300px] w-full md:w-[70%] lg:w-[60%] bg-primary-content/30 rounded-md shadow">
           <div className="flex flex-col items-center justify-center py-3 px-10">
             {/* Task List */}
             {/* Task Item */}
-            <div className="mt-4 text-3xl font-semibold mb-10">
-              <h1>Track your tasks 🚀</h1>
+            <div className="w-full mt-4 text-3xl font-semibold mb-10 flex items-center justify-between">
+              
+              <h1 className="whitespace-nowrap text-center">Track your tasks 🚀</h1>
+              <AddTaskButton setIsModalOpen={setIsModalOpen} />
             </div>
             {loading ? (
               <LoadingSpinner />
             ) : (
-              <div className="max-h-[500px] min-h-full  w-full md:w-[90%] overflow-y-scroll ">
+              <div className="max-h-[600px] min-h-full  w-full  overflow-y-scroll ">
                 {tasks?.length > 0 ? (
                   tasks?.map((task) => {
                     return (
@@ -111,7 +147,13 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {isModalOpen && <AddTaskModal setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} addNewTask={addNewTask}/>}
+      {isModalOpen && (
+        <AddTaskModal
+          setIsModalOpen={setIsModalOpen}
+          isModalOpen={isModalOpen}
+          addNewTask={addNewTask}
+        />
+      )}
     </>
   );
 };

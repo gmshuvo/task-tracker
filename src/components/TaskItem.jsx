@@ -13,6 +13,7 @@ const TaskItem = ({
   activeTaskId,
   setActiveTaskId,
 }) => {
+  console.log(task);
   return (
     <div className="w-full flex flex-col items-center justify-center gap-7 mb-6 border p-3 rounded border-slate-400 shadow-md ring-0 hover:ring-1 cursor-pointer">
       <div className="w-full flex flex-row items-start justify-between gap-5">
@@ -20,7 +21,7 @@ const TaskItem = ({
           <div className="flex flex-col flex-wrap items-start justify-center gap-4 ">
             <h1 className="text-xl font-semibold">{task.name}</h1>
             <div className="flex flex-row flex-wrap gap-4 items-center justify-start">
-              {task?.tags?.map((tag) => {
+              {task.tags?.map((tag) => {
                 return (
                   <div
                     key={tag}

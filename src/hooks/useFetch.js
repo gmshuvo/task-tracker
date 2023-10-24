@@ -18,9 +18,9 @@ function useFetch(url, options = {}) {
       }
     };
     fetchData();
-  }, []);
+  }, [url]);
 
-  return { data, loading, error, setData };
+  return { data, loading, error, setData};
 }
 
 export default useFetch;

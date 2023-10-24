@@ -14,3 +14,16 @@
   border-radius: 3px; /* Adjust the radius as needed */
 }
 
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}

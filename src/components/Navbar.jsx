@@ -6,7 +6,7 @@ import { useTheme } from "../contexts/ThemeContext";
 const Navbar = () => {
   const {theme, toggleTheme} = useTheme();
   return (
-    <div className="navbar bg-primary/60 text-white shadow-md px-4 sm:px-8">
+    <div className={`navbar shadow-md px-4 sm:px-8 ${theme === 'dark' ? 'bg-primary/40' : 'bg-primary/80 text-white'} fixed top-0 `}>
       <div className="flex-1">
         <h1 className="text-lg font-bold mx-4">Task-Tracker</h1>
       </div>
