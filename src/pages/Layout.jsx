@@ -7,7 +7,7 @@ const Layout = () => {
   return (
     <div className={`h-full min-h-full ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
       <Navbar />
-      <main className="px-4 sm:px-8">
+      <main className="px-4 sm:px-8 mt-16">
         <Outlet />
       </main>
     </div>

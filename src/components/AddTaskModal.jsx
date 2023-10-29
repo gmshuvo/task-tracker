@@ -1,4 +1,4 @@
-import TaskForm from "./TaskForm";
+import TaskForm from "./AddTaskForm";
 
 const AddTaskModal = ({ isModalOpen, setIsModalOpen, addNewTask }) => {
   return (

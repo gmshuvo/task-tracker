@@ -18,13 +18,19 @@ export function ThemeProvider({ children }) {
     localStorage.setItem("theme", newTheme);
   };
 
+  const selectTheme = (e) => {
+    const newTheme = e.target.value;
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
   useEffect(() => {
     const localTheme = localStorage.getItem("theme");
     document.querySelector("html").setAttribute("data-theme", localTheme);
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, selectTheme }}>
       {children}
     </ThemeContext.Provider>
   );

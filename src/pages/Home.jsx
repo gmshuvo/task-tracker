@@ -5,7 +5,11 @@ import useFetch from "../hooks/useFetch";
 import LoadingSpinner from "../components/LoadingSpinner";
 import AddTaskModal from "../components/AddTaskModal";
 import FetchData from "../utils/FetchData";
+import toast from "react-hot-toast";
+
+
 const Home = () => {
+  const [editTaskId, setEditTaskId] = useState(null);
   const [activeTaskId, setActiveTaskId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -33,8 +37,26 @@ const Home = () => {
     // Implement the logic to toggle task activity
   };
 
-  const editTaskName = (taskId, newName) => {
+  const editExitTask = (updatedTask) => {
     // Implement the logic to edit task name
+    const {error} = FetchData(`http://localhost:3010/tasks/${updatedTask.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedTask),
+    });
+
+    if (error) {
+      toast.error('Error updating task');
+      console.log(error);
+      return;
+    }
+    toast.success('Task updated successfully')
+    setEditTaskId(null);
+    setTasks((prevTasks) =>
+      prevTasks.map((task)=> task.id === updatedTask.id ? updatedTask : task) 
+    );
   };
 
   const addTagToTask = (taskId, newTag) => {
@@ -56,10 +78,11 @@ const Home = () => {
     })
 
     if (error) {
+      toast.error("Error removing tag");
       console.log(error);
       return;
     }
-
+    toast.success("Tag removed successfully");
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId
@@ -80,10 +103,11 @@ const Home = () => {
     });
 
     if (error) {
+      toast.error("Error adding task");
       console.log(error);
       return;
     }
-
+    toast.success("Task added successfully");
     setTasks((prevTasks) => [data, ...prevTasks]);
   };
 
@@ -97,18 +121,20 @@ const Home = () => {
     );
 
     if (error) {
+      toast.error("Error removing task");
       console.log(error);
       return;
     }
+    toast.success("Task removed successfully");
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
   return (
     <>
-      <div className=" flex items-center justify-center mt-10">
+      <div className=" flex items-center justify-center mt-32">
         {/* Add Button Open creatTaskModal*/}
         {/* Task List Container */}
-        <div className="mt-10 mb-10 min-h-[300px] w-full md:w-[70%] lg:w-[60%] bg-primary-content/30 rounded-md shadow">
+        <div className="mt-10 mb-10 min-h-[300px] w-full md:w-[70%] lg:w-[60%] bg-slate-400/20 rounded-md shadow">
           <div className="flex flex-col items-center justify-center py-3 px-10">
             {/* Task List */}
             {/* Task Item */}
@@ -128,12 +154,15 @@ const Home = () => {
                         key={task.id}
                         task={task}
                         toggleTaskActivity={toggleTaskActivity}
-                        editTaskName={editTaskName}
+                        editExitTask={editExitTask}
                         removeTask={removeTask}
                         addTagToTask={addTagToTask}
                         removeTagFromTask={removeTagFromTask}
+                        editTaskId={editTaskId}
+                        setEditTaskId={setEditTaskId}
                         activeTaskId={activeTaskId}
                         setActiveTaskId={setActiveTaskId}
+                        
                       />
                     );
                   })

@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TagInput from "./TagInput";
-import useFetch from "../hooks/useFetch";
 
-function TaskForm({ addNewTask, isModalOpen, setIsModalOpen }) {
-  const [newTaskName, setNewTaskName] = useState("");
-  const [userTags, setUserTags] = useState([]);
+const EditTaskForm = ({task, editExitTask}) => {
+  const [newTaskName, setNewTaskName] = useState(task.name);
+  const [userTags, setUserTags] = useState(task.tags);
 
   //input validation
   const taskNameError =
@@ -16,33 +15,23 @@ function TaskForm({ addNewTask, isModalOpen, setIsModalOpen }) {
       ? "You can add up to 5 tags"
       : null;
 
-  const handleAddNewTask = () => {
+  const handleUpdatedTask = () => {
     if (newTaskName.trim() !== "") {
-      addNewTask({
-        id: Math.floor(Math.random() * 10000),
+      editExitTask({
+        ...task,
         name: newTaskName,
         tags: userTags,
-        active: false,
-        activityLog: [],
-        lastStartTime: null,
-        createdAt: Date.now(),
         updatedAt: Date.now(),
       });
       setNewTaskName("");
       setUserTags([]);
-      setIsModalOpen(false);
     }
-  };
-
-  const {
-    data: tags,
-    error,
-    loading,
-  } = useFetch("http://localhost:3010/tags");
-  // console.log(tags);
+  }
 
   return (
-    <div className="mt-10 flex flex-col justify-center">
+    <div className="w-full">
+
+    <div className="w-full flex flex-col justify-center">
       <label htmlFor="newTaskName" className=" text-lg mb-2">
         Task Name
       </label>
@@ -62,20 +51,21 @@ function TaskForm({ addNewTask, isModalOpen, setIsModalOpen }) {
 
       {/* Add tags suggetions new tags*/}
       <TagInput
-        suggestedTags={tags}
         setUserTags={setUserTags}
         userTags={userTags}
       />
       {tagsError && <p className="text-red-500 text-sm mb-2">{tagsError}</p>}
-      <button
-        onClick={handleAddNewTask}
+    </div>
+    
+    <button
+        onClick={handleUpdatedTask}
         disabled={taskNameError || tagsError}
-        className="absolute bottom-6 right-4 left-4 px-4 py-2 border bg-transparent rounded hover:bg-black/60 hover:text-white"
+        className="mt-3 flex float-right  px-4 py-2 border bg-transparent rounded hover:bg-black/60 hover:text-white"
       >
-        Add Task
+        Save
       </button>
     </div>
   );
 }
 
-export default TaskForm;
+export default EditTaskForm;

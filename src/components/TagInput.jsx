@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
-const TagInput = ({ suggestedTags, setUserTags, userTags }) => {
+const TagInput = ({ suggestedTags = [], setUserTags, userTags }) => {
   
   const [userInput, setUserInput] = useState("");
 
