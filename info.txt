@@ -1,0 +1,19 @@
+clone this repo 
+
+step: 1
+Open terminal
+
+step: 2 
+npm install
+
+step: 3 
+npm start
+
+step: 4
+Open another terminal
+
+step: 5
+npm run server
+
+
+all set ---> go to localhost:3000 
