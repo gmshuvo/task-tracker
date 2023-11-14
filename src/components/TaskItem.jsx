@@ -36,7 +36,7 @@ const TaskItem = ({
             <div className="flex items-center justify-center gap-2 flex-wrap">
               <h1
                 className="text-xl font-semibold"
-                onClick={(e) => onClickTask(e, task.id)}
+                onClick={(e) => onClickTask(e, task?.id)}
               >
                 {task?.name}
               </h1>
@@ -50,7 +50,7 @@ const TaskItem = ({
             </div>
             <span className="text-sm font-semibold">
               <span className="">Total Active: </span>
-              {calculateTotalActivityTime(task)}
+              {task && calculateTotalActivityTime(task)}
             </span>
 
             {task?.lastStartTime && (
@@ -69,7 +69,7 @@ const TaskItem = ({
                     <h1 className="text-sm font-semibold">{tag}</h1>
                     <button
                       onClick={(e) => {
-                        removeTagFromTask(e, task.id, tag);
+                        removeTagFromTask(e, task?.id, tag);
                       }}
                       className="ml-2"
                     >
@@ -84,10 +84,10 @@ const TaskItem = ({
         <div className="flex flex-row items-start justify-end gap-3">
           <button
             onClick={(e) => {
-              toggleTaskActivity(task.id);
+              toggleTaskActivity(task?.id);
             }}
           >
-            {task.isActive ? (
+            {task?.isActive ? (
               <BsPlayCircle className="w-6 h-6" />
             ) : (
               <BsPauseCircle className="w-6 h-6" />
@@ -96,21 +96,21 @@ const TaskItem = ({
           <button
             onClick={(e) => {
               setIsEditTaskOpen(!isEditTaskOpen);
-              onEditTaskId(e, task.id);
+              onEditTaskId(e, task?.id);
             }}
           >
             <FaEdit className="w-6 h-6" />
           </button>
           <button
             onClick={(e) => {
-              removeTask(e, task.id);
+              removeTask(e, task?.id);
             }}
           >
             <AiOutlineCloseCircle className="w-6 h-6" />
           </button>
         </div>
       </div>
-      {isEditTaskOpen && editTaskId === task.id && (
+      {isEditTaskOpen && editTaskId === task?.id && (
         <EditTaskForm
           task={task}
           editExitTask={editExitTask}

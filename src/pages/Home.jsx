@@ -7,48 +7,69 @@ import AddTaskModal from "../components/AddTaskModal";
 import FetchData from "../utils/FetchData";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { calculateTotalActivityTime } from "../utils/helper";
-import { useLayoutEffect } from "react";
+
+import { DragDropContext, Draggable } from "react-beautiful-dnd";
+import { StrictModeDroppable as Droppable } from "../utils/StrictModeDroppable";
 
 const Home = () => {
   const [editTaskId, setEditTaskId] = useState(null);
   const [activeTaskId, setActiveTaskId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tasks, setTasks] = useState(null);
 
   const navigate = useNavigate();
 
   //fetch all tasks
 
-  // const {data:tasks, setData:setTasks,  error, loading} = useFetch("http://localhost:3010/tasks");
+  const { data, setData, error, loading } = useFetch(
+    "http://localhost:3010/tasks"
+  );
+
+  const [tasks, setTasks] = useState(data || null);
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const { data, error } = await FetchData("http://localhost:3010/tasks");
-        if (error) {
-          console.error("Error fetching tasks:", error);
-          return;
-        }
-        setTasks(data);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
-    const interval = setInterval(() => {
-      fetchTasks();
-    }, 60000);
-    fetchTasks();
-    return () => clearInterval(interval);
-  }, []);
+    const arrayIdOrder = JSON.parse(localStorage.getItem("taskIdOrder"));
+    //if not set taskIdOrder in localstorage
+    if (!arrayIdOrder && data?.length) {
+      localStorage.setItem(
+        "taskIdOrder",
+        JSON.stringify(data.map((task) => task.id))
+      );
+    }
 
-  if (tasks) {
-    tasks.sort((a, b) => {
-      return b.createdAt - a.createdAt;
-    });
-  }
+    //if set in localstorage
+    let updatedTasks = [];
+    if (arrayIdOrder?.length && data?.length) {
+      updatedTasks = arrayIdOrder.map((id) =>
+        data.find((task) => task.id === id)
+      );
+
+      const newTasks = data.filter((task) => !arrayIdOrder.includes(task.id));
+      updatedTasks = [...newTasks, ...updatedTasks];
+    }
+
+    setTasks(updatedTasks || data);
+  }, [data]);
 
   console.log(tasks);
+  // useEffect(() => {
+  // const fetchTasks = async () => {
+  //   try {
+  //     const { data, error } = await FetchData("http://localhost:3010/tasks");
+  //     if (error) {
+  //       console.error("Error fetching tasks:", error);
+  //       return;
+  //     }
+  //     setTasks(data);
+  //   } catch (error) {
+  //     console.error("Error fetching tasks:", error);
+  //   }
+  // };
+  // const interval = setInterval(() => {
+  //   fetchTasks();
+  // }, 60000);
+  // fetchTasks();
+  // return () => clearInterval(interval);
+  // }, []);
 
   const onClickTask = (e, taskId) => {
     e.stopPropagation();
@@ -213,6 +234,22 @@ const Home = () => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
+  const OnDragEnd = async (result) => {
+    if (!result.destination) return;
+    const items = [...tasks];
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    // setTasks(items);
+    const idsOrderArray = items.map((task) => task.id);
+    // set tasksOrderId from localstorage
+    localStorage.setItem("taskIdOrder", JSON.stringify(idsOrderArray));
+
+    // update taskIdOrder
+    setTasks(items);
+
+    console.log(items);
+  };
+
   return (
     <>
       <div className=" flex items-center justify-center mt-16 mb-32">
@@ -228,36 +265,55 @@ const Home = () => {
               </h1>
               <AddTaskButton setIsModalOpen={setIsModalOpen} />
             </div>
-            {false ? (
+            {loading ? (
               <LoadingSpinner />
             ) : (
-              <div className="max-h-[600px] min-h-full  w-full  overflow-y-scroll ">
-                {tasks?.length > 0 ? (
-                  tasks?.map((task) => {
-                    return (
-                      <TaskItem
-                        key={task.id}
-                        task={task}
-                        toggleTaskActivity={toggleTaskActivity}
-                        editExitTask={editExitTask}
-                        removeTask={removeTask}
-                        addTagToTask={addTagToTask}
-                        removeTagFromTask={removeTagFromTask}
-                        editTaskId={editTaskId}
-                        setEditTaskId={setEditTaskId}
-                        activeTaskId={activeTaskId}
-                        setActiveTaskId={setActiveTaskId}
-                        onClickTask={onClickTask}
-                        onEditTaskId={onEditTaskId}
-                      />
-                    );
-                  })
-                ) : (
-                  <div className="mt-4 text-3xl font-semibold mb-10 text-center">
-                    <h1>No tasks found</h1>
-                  </div>
-                )}
-              </div>
+              <DragDropContext onDragEnd={OnDragEnd}>
+                <Droppable droppableId="tasks">
+                  {(provided) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className="max-h-[600px] min-h-full  w-full  overflow-y-scroll "
+                    >
+                      {tasks?.map((task, index) => {
+                        return (
+                          <Draggable
+                            key={task?.id}
+                            draggableId={task?.id.toString()}
+                            index={index}
+                          >
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                <TaskItem
+                                  key={task?.id}
+                                  task={task}
+                                  toggleTaskActivity={toggleTaskActivity}
+                                  editExitTask={editExitTask}
+                                  removeTask={removeTask}
+                                  addTagToTask={addTagToTask}
+                                  removeTagFromTask={removeTagFromTask}
+                                  editTaskId={editTaskId}
+                                  setEditTaskId={setEditTaskId}
+                                  activeTaskId={activeTaskId}
+                                  setActiveTaskId={setActiveTaskId}
+                                  onClickTask={onClickTask}
+                                  onEditTaskId={onEditTaskId}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
             )}
           </div>
         </div>
