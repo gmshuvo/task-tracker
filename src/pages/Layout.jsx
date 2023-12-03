@@ -5,9 +5,9 @@ import { useTheme } from "../contexts/ThemeContext";
 const Layout = () => {
   const { theme } = useTheme();
   return (
-    <div className={`h-full min-h-full ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+    <div className={`w-full min-h-full ${theme === 'dark' ? 'text-white' : 'text-black'} overflow-scroll`}>
       <Navbar />
-      <main className="px-4 sm:px-8 mt-16">
+      <main className="px-4 sm:px-8">
         <Outlet />
       </main>
     </div>

@@ -1,24 +1,37 @@
-export const formatTime = (milliseconds) => {
-  const minutes = Math.floor(milliseconds / 60000);
-  const hours = Math.floor(minutes / 60);
-  return `${hours > 0 ? hours + ' hours': ""}  ${minutes % 60} minutes`;
+import { formatDistanceToNow } from 'date-fns';
+
+export const formatTime = (isoDateString) => {
+  const date = new Date(isoDateString);
+  return formatDistanceToNow(date, { addSuffix: true });
 };
 
 export const calculateTotalActivityTime = (task) => {
-  const { activityLog, lastStartTime, isActive } = task;
-  let totalActivityTime = 0;
+  // Check if the task has an activityLog
+  if (task && task.activityLog && task.activityLog.length > 0) {
+    // Calculate total duration by summing up the differences between end and start times
+    const totalDuration = task.activityLog.reduce((total, log) => {
+      const startTime = new Date(log.startTime);
+      const endTime = new Date(log.endTime);
+      const duration = endTime - startTime;
+      return total + duration;
+    }, 0);
 
-  for (const entry of activityLog) {
-    if (entry.startTime && entry.endTime) {
-      totalActivityTime += entry.endTime - entry.startTime;
-    }
+    // Convert total duration from milliseconds to seconds
+    const totalSeconds = totalDuration / 1000;
+
+    // Optionally, format the total duration into a human-readable format (hours, minutes, seconds)
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+
+    return  `${hours > 0 ? `${hours} h`: ""} ${minutes > 0 ? `${minutes} m`: ""} ${seconds > 0 ? `${seconds} s`: ""}`;
+    
   }
 
-  if (isActive) {
-    totalActivityTime += (Date.now() - lastStartTime);
-  }
-  return formatTime(totalActivityTime);
+  // Return default values if there is no activityLog
+  return "0 s";
 };
+
 
 // weekly total active time
 const groupActivityLogByWeek = (activityLog) => {

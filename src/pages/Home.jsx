@@ -24,7 +24,7 @@ const Home = () => {
     "http://localhost:3010/tasks"
   );
 
-  const [tasks, setTasks] = useState(data || null);
+  const [tasks, setTasks] = useState(data );
 
   useEffect(() => {
     const arrayIdOrder = JSON.parse(localStorage.getItem("taskIdOrder"));
@@ -32,7 +32,7 @@ const Home = () => {
     if (!arrayIdOrder && data?.length) {
       localStorage.setItem(
         "taskIdOrder",
-        JSON.stringify(data.map((task) => task.id))
+        JSON.stringify(data?.map((task) => task.id))
       );
     }
 
@@ -51,25 +51,6 @@ const Home = () => {
   }, [data]);
 
   console.log(tasks);
-  // useEffect(() => {
-  // const fetchTasks = async () => {
-  //   try {
-  //     const { data, error } = await FetchData("http://localhost:3010/tasks");
-  //     if (error) {
-  //       console.error("Error fetching tasks:", error);
-  //       return;
-  //     }
-  //     setTasks(data);
-  //   } catch (error) {
-  //     console.error("Error fetching tasks:", error);
-  //   }
-  // };
-  // const interval = setInterval(() => {
-  //   fetchTasks();
-  // }, 60000);
-  // fetchTasks();
-  // return () => clearInterval(interval);
-  // }, []);
 
   const onClickTask = (e, taskId) => {
     e.stopPropagation();
@@ -104,7 +85,7 @@ const Home = () => {
           ...activityLog,
           {
             startTime: lastStartTime,
-            endTime: Date.now(),
+            endTime: new Date().toISOString(),
           },
         ],
       };
@@ -112,7 +93,7 @@ const Home = () => {
       updatedTask = {
         ...activeTask,
         isActive: true,
-        lastStartTime: Date.now(),
+        lastStartTime: new Date().toISOString(),
       };
     }
 
@@ -231,6 +212,10 @@ const Home = () => {
       return;
     }
     toast.success("Task removed successfully");
+    //remove this task id from localstorage
+    const arrayIdOrder = JSON.parse(localStorage.getItem("taskIdOrder"));
+    const updatedArrayIdOrder = arrayIdOrder.filter((id) => id !== taskId);
+    localStorage.setItem("taskIdOrder", JSON.stringify(updatedArrayIdOrder));
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
@@ -243,7 +228,6 @@ const Home = () => {
     const idsOrderArray = items.map((task) => task.id);
     // set tasksOrderId from localstorage
     localStorage.setItem("taskIdOrder", JSON.stringify(idsOrderArray));
-
     // update taskIdOrder
     setTasks(items);
 
@@ -252,17 +236,16 @@ const Home = () => {
 
   return (
     <>
-      <div className=" flex items-center justify-center mt-16 mb-32">
-        {/* Add Button Open creatTaskModal*/}
+      <div className=" flex items-center justify-center mt-8 mb-32">
         {/* Task List Container */}
         <div className="mt-10 mb-10 min-h-[300px] w-full md:w-[70%] lg:w-[60%] bg-slate-400/20 rounded-md shadow">
           <div className="flex flex-col items-center justify-center py-3 px-10">
             {/* Task List */}
             {/* Task Item */}
             <div className="w-full mt-4 text-3xl font-semibold mb-10 flex items-center justify-between">
-              <h1 className="whitespace-nowrap text-center">
+              {/* <h1 className="whitespace-nowrap text-center">
                 Track your tasks 🚀
-              </h1>
+              </h1> */}
               <AddTaskButton setIsModalOpen={setIsModalOpen} />
             </div>
             {loading ? (

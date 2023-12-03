@@ -21,7 +21,7 @@ const EditTaskForm = ({ task, editExitTask, setIsEditTaskOpen }) => {
         ...task,
         name: newTaskName,
         tags: userTags,
-        updatedAt: Date.now(),
+        updatedAt: new Date().toISOString(),
       });
       setNewTaskName("");
       setUserTags([]);

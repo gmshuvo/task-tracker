@@ -30,7 +30,7 @@ const SingleTask = () => {
 
   return (
     <>
-    <div className=' w-full h-full flex flex-col items-center justify-center'>
+    <div className=' w-full h-full flex flex-col items-center mt-8 justify-center'>
       <h1 className='mt-10 text-2xl font-semibold '>Total activity in last 7 days</h1>
     </div>
     <WeeklyBarChart task={task}/>

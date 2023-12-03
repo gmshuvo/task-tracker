@@ -22,11 +22,11 @@ function AddTaskForm({ addNewTask, isModalOpen, setIsModalOpen }) {
         id: Math.floor(Math.random() * 10000),
         name: newTaskName,
         tags: userTags,
-        active: false,
+        isActive: false,
         activityLog: [],
         lastStartTime: null,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
       setNewTaskName("");
       setUserTags([]);

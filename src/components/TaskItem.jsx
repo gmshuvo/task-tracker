@@ -56,7 +56,7 @@ const TaskItem = ({
             {task?.lastStartTime && (
               <span className="text-sm font-semibold">
                 <span className="">Last Started: </span>
-                {formatTime(Date.now() - task?.lastStartTime)}
+                {formatTime(task?.lastStartTime)}
               </span>
             )}
             <div className="flex flex-row flex-wrap gap-4 items-center justify-start">
